@@ -1,7 +1,7 @@
 %define oname	zyGrib
 
 Name:		zygrib
-Version:	3.8.3
+Version:	3.9.2
 Release:	%mkrel 1
 Summary:	Weather data visualization, GRIB file viewer
 License:	GPLv3
@@ -10,7 +10,7 @@ Url:		http://www.zygrib.org
 # Sources downloaded at :
 # http://www.zygrib.org/getfile.php?file=zyGrib-3.8.3.tgz
 # http://www.zygrib.org/getfile.php?file=zyGrib_maps2.tgz
-# Given the size, tarballs are extracted and recompressed using xz
+# Given the size, tarballs are extracted and recompressed using xz (tar -cJ)
 Source0:	%{oname}-%{version}.tar.xz
 Source1:	%{oname}_maps2.tar.xz
 # From the Debian package
@@ -106,4 +106,3 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/maps/gshhs/rangs_1.*
 %{_datadir}/%{name}/maps/gshhs/wdb_*_f.b
 %{_datadir}/%{name}/maps/gshhs/wdb_*_h.b
-
