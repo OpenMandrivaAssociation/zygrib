@@ -19,7 +19,7 @@ Patch0:		qwt_include.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 BuildRequires:	qt4-devel libqwt-devel
-BuildRequires:	proj-devel
+BuildRequires:	proj-devel bzip2-devel
 
 Suggests:	%{name}-maps-high
 
