@@ -1,7 +1,7 @@
 %define oname	zyGrib
 
 Name:		zygrib
-Version:	3.9.2
+Version:	5.0.6
 Release:	%mkrel 1
 Summary:	Weather data visualization, GRIB file viewer
 License:	GPLv3
@@ -11,13 +11,14 @@ Url:		http://www.zygrib.org
 # http://www.zygrib.org/getfile.php?file=zyGrib-3.8.3.tgz
 # http://www.zygrib.org/getfile.php?file=zyGrib_maps2.tgz
 # Given the size, tarballs are extracted and recompressed using xz (tar -cJ)
-Source0:	%{oname}-%{version}.tar.xz
-Source1:	%{oname}_maps2.tar.xz
+Source0:	%{oname}-%{version}.tgz
+Source1:	%{oname}_maps2.4.tgz
 # From the Debian package
 Source2:	%{name}.png
+Patch0:		qwt_include.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
-BuildRequires:	qt4-devel
+BuildRequires:	qt4-devel libqwt-devel
 BuildRequires:	proj-devel
 
 Suggests:	%{name}-maps-high
@@ -43,6 +44,7 @@ provided in the main package.
 %prep
 %setup -q -n %{oname}-%{version}
 %setup -q -n %{oname}-%{version} -T -D -a 1
+%patch0 -p1
 
 # fix paths so that the executable can be relocated in %{_bindir}
 sed -i -e 's:"maps\/:"%{_datadir}\/%{name}\/maps\/:g' src/map/GisReader.cpp src/MainWindow.cpp
@@ -59,9 +61,9 @@ install -d -m755 %{buildroot}%{_bindir}
 install -D -m755 src/%{oname} %{buildroot}%{_bindir}
 
 install -d -m755 %{buildroot}%{_datadir}/%{name}/tr
-cp -pr maps %{buildroot}%{_datadir}/%{name}
-cp -pr img %{buildroot}%{_datadir}/%{name}
-install -D -m644 tr/*.qm %{buildroot}%{_datadir}/%{name}/tr
+cp -pr data/maps %{buildroot}%{_datadir}/%{name}
+cp -pr data/img %{buildroot}%{_datadir}/%{name}
+install -D -m644 data/tr/*.qm %{buildroot}%{_datadir}/%{name}/tr
 
 # desktop file
 install -d -m755 %{buildroot}%{_datadir}/applications
