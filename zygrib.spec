@@ -108,3 +108,19 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/maps/gshhs/rangs_1.*
 %{_datadir}/%{name}/maps/gshhs/wdb_*_f.b
 %{_datadir}/%{name}/maps/gshhs/wdb_*_h.b
+
+
+%changelog
+* Fri Oct 28 2011 Alexander Khrukin <akhrukin@mandriva.org> 5.0.6-1
++ Revision: 707753
+- forgotten bzip dep
+- update release to upstream patch with qwt qt4 fix added
+
+* Sat Aug 07 2010 Samuel Verschelde <stormi@mandriva.org> 3.9.2-1mdv2011.0
++ Revision: 567459
+- update to 3.9.2 (thanks to Jacques Granger)
+
+* Thu Feb 04 2010 Jérôme Brenier <incubusss@mandriva.org> 3.8.3-1mdv2010.1
++ Revision: 500915
+- import zygrib
+
