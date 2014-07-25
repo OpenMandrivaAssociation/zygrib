@@ -1,26 +1,26 @@
-%define oname	zyGrib
+%define oname zyGrib
 
-Name:		zygrib
-Version:	5.0.6
-Release:	%mkrel 1
 Summary:	Weather data visualization, GRIB file viewer
-License:	GPLv3
+Name:		zygrib
+Version:	6.2.3
+Release:	2
+License:	GPLv3+
 Group:		Sciences/Geosciences
 Url:		http://www.zygrib.org
 # Sources downloaded at :
 # http://www.zygrib.org/getfile.php?file=zyGrib-3.8.3.tgz
 # http://www.zygrib.org/getfile.php?file=zyGrib_maps2.tgz
-# Given the size, tarballs are extracted and recompressed using xz (tar -cJ)
 Source0:	%{oname}-%{version}.tgz
 Source1:	%{oname}_maps2.4.tgz
 # From the Debian package
 Source2:	%{name}.png
-Patch0:		qwt_include.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-
-BuildRequires:	qt4-devel libqwt-devel
-BuildRequires:	proj-devel bzip2-devel
-
+Patch0:		zyGrib-6.2.3-system-qwt.patch
+Patch1:		zyGrib-6.2.3-datapath.patch
+BuildRequires:	bzip2-devel
+BuildRequires:	libnova-devel
+BuildRequires:	qt4-devel
+BuildRequires:	qwt-devel
+BuildRequires:	pkgconfig(proj)
 Suggests:	%{name}-maps-high
 
 %description
@@ -31,64 +31,7 @@ o Automatic GRIB data download
 o Automatic Download from IAC (fleetcode) Data
 o Roh or compressed GRIB Data (gzip *.gz; bzip2 *.bz2) can be used
 
-%package maps-high
-Summary:	High resolution maps for %{oname}
-Group:		Sciences/Geosciences
-
-Requires:	%{name}
-
-%description maps-high
-This package contains maps for %{oname} in higher resolution than the ones 
-provided in the main package.
-
-%prep
-%setup -q -n %{oname}-%{version}
-%setup -q -n %{oname}-%{version} -T -D -a 1
-%patch0 -p1
-
-# fix paths so that the executable can be relocated in %{_bindir}
-sed -i -e 's:"maps\/:"%{_datadir}\/%{name}\/maps\/:g' src/map/GisReader.cpp src/MainWindow.cpp
-sed -i -e 's:"img\/:"%{_datadir}\/%{name}\/img\/:g' src/GribAnimator.cpp src/MenuBar.cpp
-sed -i -e 's:"tr\/:"%{_datadir}\/%{name}\/tr\/:g' src/MenuBar.cpp src/main.cpp
-
-%build
-make QTBIN=%{qt4bin}
-
-%install
-rm -rf %{buildroot}
-
-install -d -m755 %{buildroot}%{_bindir}
-install -D -m755 src/%{oname} %{buildroot}%{_bindir}
-
-install -d -m755 %{buildroot}%{_datadir}/%{name}/tr
-cp -pr data/maps %{buildroot}%{_datadir}/%{name}
-cp -pr data/img %{buildroot}%{_datadir}/%{name}
-install -D -m644 data/tr/*.qm %{buildroot}%{_datadir}/%{name}/tr
-
-# desktop file
-install -d -m755 %{buildroot}%{_datadir}/applications
-cat << EOF > %{buildroot}%{_datadir}/applications/%{name}.desktop
-[Desktop Entry]
-Name=%{oname}
-GenericName=GRIB file viewer
-Comment=Multi-protocol Messaging Client
-Exec=%{_bindir}/%{oname}
-Icon=%{name}
-Terminal=false
-Type=Application
-StartupNotify=true
-Categories=Science;Geoscience;
-EOF
-
-# icon
-install -d -m755 %{buildroot}%{_datadir}/pixmaps
-install -D -m644 %{SOURCE2} %{buildroot}%{_datadir}/pixmaps
-
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
 %{_bindir}/%{oname}
 %{_datadir}/%{name}
 %exclude %{_datadir}/%{name}/maps/gshhs/gshhs_0.rim
@@ -100,8 +43,19 @@ rm -rf %{buildroot}
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/applications/%{name}.desktop
 
+#----------------------------------------------------------------------------
+
+%package maps-high
+Summary:	High resolution maps for %{oname}
+Group:		Sciences/Geosciences
+Requires:	%{name}
+BuildArch:	noarch
+
+%description maps-high
+This package contains maps for %{oname} in higher resolution than the ones 
+provided in the main package.
+
 %files maps-high
-%defattr(-,root,root,-)
 %{_datadir}/%{name}/maps/gshhs/gshhs_0.rim
 %{_datadir}/%{name}/maps/gshhs/gshhs_1.rim
 %{_datadir}/%{name}/maps/gshhs/rangs_0.*
@@ -109,18 +63,46 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/maps/gshhs/wdb_*_f.b
 %{_datadir}/%{name}/maps/gshhs/wdb_*_h.b
 
+#----------------------------------------------------------------------------
 
-%changelog
-* Fri Oct 28 2011 Alexander Khrukin <akhrukin@mandriva.org> 5.0.6-1
-+ Revision: 707753
-- forgotten bzip dep
-- update release to upstream patch with qwt qt4 fix added
+%prep
+%setup -q -n %{oname}-%{version}
+%setup -q -n %{oname}-%{version} -T -D -a 1
+%patch0 -p1
+%patch1 -p1
 
-* Sat Aug 07 2010 Samuel Verschelde <stormi@mandriva.org> 3.9.2-1mdv2011.0
-+ Revision: 567459
-- update to 3.9.2 (thanks to Jacques Granger)
+%build
+%make
 
-* Thu Feb 04 2010 Jérôme Brenier <incubusss@mandriva.org> 3.8.3-1mdv2010.1
-+ Revision: 500915
-- import zygrib
+%install
+install -d -m755 %{buildroot}%{_bindir}
+install -D -m755 src/%{oname} %{buildroot}%{_bindir}
+
+install -d -m755 %{buildroot}%{_datadir}/%{name}/tr
+cp -pr data/maps %{buildroot}%{_datadir}/%{name}/maps
+cp -pr data/img %{buildroot}%{_datadir}/%{name}/img
+cp -pr data/colors %{buildroot}%{_datadir}/%{name}/colors
+cp -pr data/fonts %{buildroot}%{_datadir}/%{name}/fonts
+cp -pr data/gis %{buildroot}%{_datadir}/%{name}/gis
+cp -pr data/stuff %{buildroot}%{_datadir}/%{name}/stuff
+install -D -m644 data/tr/*.qm %{buildroot}%{_datadir}/%{name}/tr
+
+# desktop file
+install -d -m755 %{buildroot}%{_datadir}/applications
+cat << EOF > %{buildroot}%{_datadir}/applications/%{name}.desktop
+[Desktop Entry]
+Name=%{oname}
+GenericName=GRIB file viewer
+Comment=Weather data visualization, GRIB file viewer
+Exec=%{_bindir}/%{oname}
+Icon=%{name}
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Science;Geoscience;
+EOF
+
+# icon
+install -d -m755 %{buildroot}%{_datadir}/pixmaps
+install -D -m644 %{SOURCE2} %{buildroot}%{_datadir}/pixmaps
 

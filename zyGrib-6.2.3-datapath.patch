@@ -1,0 +1,29 @@
+diff -urN zyGrib-6.2.3/src/util/Util.h zyGrib-6.2.3-patched/src/util/Util.h
+--- zyGrib-6.2.3/src/util/Util.h	2014-01-09 22:40:40.000000000 +1100
++++ zyGrib-6.2.3-patched/src/util/Util.h	2014-07-25 17:22:04.456398030 +1100
+@@ -70,16 +70,16 @@
+ 	static QString getOpenFileName (QWidget *parent, const QString &caption, 
+ 							const QString &dir, const QString &filter=QString());
+ 		
+-	static QString pathData ()   {return "./";};
+-	static QString pathColors () {return pathData()+"data/colors/";}
+-	static QString pathConfig () {return pathData()+"data/config/";}
+-	static QString pathFonts ()  {return pathData()+"data/fonts/";}
+-	static QString pathGis ()    {return pathData()+"data/gis/";}
+-	static QString pathGshhs ()  {return pathData()+"data/maps/gshhs/";}
+-	static QString pathStuff ()  {return pathData()+"data/stuff/";}
++	static QString pathData ()   {return "/usr/share/zygrib";};
++	static QString pathColors () {return pathData()+"/colors/";}
++	static QString pathConfig () {return pathData()+"/config/";}
++	static QString pathFonts ()  {return pathData()+"/fonts/";}
++	static QString pathGis ()    {return pathData()+"/gis/";}
++	static QString pathGshhs ()  {return pathData()+"/maps/gshhs/";}
++	static QString pathStuff ()  {return pathData()+"/stuff/";}
+ 	
+-	static QString pathImg (const char *fname) {return pathData()+"data/img/"+fname;}
+-	static QString pathTr  (QString lang)   {return pathData()+"data/tr/zyGrib_"+lang;}
++	static QString pathImg (const char *fname) {return pathData()+"/img/"+fname;}
++	static QString pathTr  (QString lang)   {return pathData()+"/tr/zyGrib_"+lang;}
+ 	static QString getServerName ();
+ 
+     static void     setSetting (const QString &key, const QVariant &value);
