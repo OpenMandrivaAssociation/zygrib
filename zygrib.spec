@@ -3,7 +3,7 @@
 Summary:	Weather data visualization, GRIB file viewer
 Name:		zygrib
 Version:	6.2.3
-Release:	2
+Release:	3
 License:	GPLv3+
 Group:		Sciences/Geosciences
 Url:		http://www.zygrib.org
