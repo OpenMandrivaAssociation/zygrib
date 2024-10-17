@@ -6,7 +6,7 @@ Version:	6.2.3
 Release:	3
 License:	GPLv3+
 Group:		Sciences/Geosciences
-Url:		http://www.zygrib.org
+Url:		https://www.zygrib.org
 # Sources downloaded at :
 # http://www.zygrib.org/getfile.php?file=zyGrib-3.8.3.tgz
 # http://www.zygrib.org/getfile.php?file=zyGrib_maps2.tgz
