@@ -16,6 +16,7 @@ Source1:	%{oname}_maps2.4.tgz
 Source2:	%{name}.png
 Patch0:		zyGrib-6.2.3-system-qwt.patch
 Patch1:		zyGrib-6.2.3-datapath.patch
+BuildRequires:	make
 BuildRequires:	bzip2-devel
 BuildRequires:	libnova-devel
 BuildRequires:	qt4-devel
